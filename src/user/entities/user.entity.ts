@@ -23,7 +23,7 @@ export class User extends BaseEntity {
   @Column()
   email: string;
 
-  @Column()
+  @Column({select:false})
   password: string;
 
   @Column({type:'numeric'})
@@ -40,6 +40,9 @@ export class User extends BaseEntity {
 
   @Column()
   role: string;
+
+  @Column()
+  image:string
 
   @CreateDateColumn()
   createdAt: Date;

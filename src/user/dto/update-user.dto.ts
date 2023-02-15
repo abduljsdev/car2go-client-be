@@ -1,7 +1,10 @@
-import { IsString, IsEmail, IsOptional } from 'class-validator';
+import { IsString, IsEmail, IsOptional } from 'class-validator'
+import {Type} from "class-transformer";
+import { UserType } from '../enum/user.enum';
 
 export class UpdateUserDto {
   
+
   @IsString()
   @IsOptional()
   firstName: string;
@@ -17,4 +20,24 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   password: string;
+
+  @IsOptional()
+  @IsString()
+  phone:number
+
+  @IsOptional()
+  @IsString()
+  address:string
+
+  @IsOptional()
+  @Type(() => Number)
+  age:number
+
+  @IsOptional()
+  @IsString()
+  gender:string
+
+  @IsString()
+  @IsOptional()
+  role:UserType.SELLER | UserType.BUYER;
 }

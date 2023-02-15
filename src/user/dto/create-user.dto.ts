@@ -1,5 +1,7 @@
+
 import { IsString, IsEmail, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
 import { UserType } from '../enum/user.enum';
+import { Type } from 'class-transformer';
 
 export class CreateUserDto {
 
@@ -20,7 +22,7 @@ export class CreateUserDto {
   password: string;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   phone:number
 
   @IsNotEmpty()
@@ -28,7 +30,7 @@ export class CreateUserDto {
   address:string
 
   @IsNotEmpty()
-  @IsNumber()
+  @Type(() => Number)
   age:number
 
   @IsNotEmpty()
