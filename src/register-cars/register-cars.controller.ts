@@ -33,8 +33,24 @@ export class RegisterCarsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRegisterCarDto: UpdateRegisterCarDto) {
-    return this.registerCarsService.update(+id, updateRegisterCarDto);
+  @UseInterceptors(FileInterceptor('image'))
+  async update(
+    @Param('id') id: string,
+    @Body() updateRegisterCarDto: UpdateRegisterCarDto,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
+    if (image) {
+      const logRes = (await uploadToCloudinary(
+        image.buffer,
+        'image',
+      )) as string;
+      return this.registerCarsService.update(+id, {
+        ...updateRegisterCarDto,
+        ...{ image: logRes },
+      });
+    } else {
+      return this.registerCarsService.update(+id, updateRegisterCarDto);
+    }
   }
 
   @Delete(':id')

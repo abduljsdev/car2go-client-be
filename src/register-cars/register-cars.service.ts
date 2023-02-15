@@ -17,24 +17,6 @@ export class RegisterCarsService {
       ...createRegisterCarDto,
     });
     return this.registerCarRepository.save(registerCar);
-
-    // const registerCar = new RegisterCar();
-    // registerCar.userId = createRegisterCarDto.userId;
-    // registerCar.name = createRegisterCarDto.name;
-    // registerCar.brandName = createRegisterCarDto.brandName;
-    // registerCar.model = createRegisterCarDto.model
-    // registerCar.number = createRegisterCarDto.number;
-    // registerCar.transmission = createRegisterCarDto.transmission;
-    // registerCar.price = createRegisterCarDto.price;
-    // registerCar.seats = createRegisterCarDto.seats;
-    // registerCar.fuelAverage = createRegisterCarDto.fuelAverage;
-    // registerCar.doors = createRegisterCarDto.doors;
-    // registerCar.category = createRegisterCarDto.category;
-    // registerCar.luggageCapacity = createRegisterCarDto.luggageCapacity;
-    // registerCar.passangerCapcity = createRegisterCarDto.passangerCapcity;
-    // registerCar.location = createRegisterCarDto.location;
-    // registerCar.image = createRegisterCarDto.image;
-    // return this.registerCarRepository.save(registerCar);
   }
 
   findAll() {
@@ -45,10 +27,10 @@ export class RegisterCarsService {
     return this.registerCarRepository.findOneBy({ id });
   }
   update(id: number, updateRegisterCarDto: UpdateRegisterCarDto) {
-    return `This action updates a #${id} registerCar`;
+    return this.registerCarRepository.update(id, updateRegisterCarDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} registerCar`;
+    return this.registerCarRepository.delete(id);
   }
 }
