@@ -5,6 +5,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { User } from './user/entities/user.entity';
+import { RegisterCarsModule } from './register-cars/register-cars.module';
+import { RegisterCar } from './register-cars/entities/register-car.entity';
 
 @Module({
   imports: [
@@ -23,13 +25,14 @@ import { User } from './user/entities/user.entity';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [User],
+        entities: [User,RegisterCar],
         synchronize: true,
         logging: true,
       }),
       inject: [ConfigService],
     }),
     UserModule,
+    RegisterCarsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
