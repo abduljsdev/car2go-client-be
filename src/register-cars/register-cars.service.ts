@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateRegisterCarDto } from './dto/create-register-car.dto';
@@ -12,19 +12,34 @@ export class RegisterCarsService {
     private readonly registerCarRepository: Repository<RegisterCar>,
   ) {}
 
-  create(createRegisterCarDto: CreateRegisterCarDto) {
+  create(createRegisterCarDto: CreateRegisterCarDto,) {
     const registerCar = this.registerCarRepository.create({
       ...createRegisterCarDto,
     });
     return this.registerCarRepository.save(registerCar);
   }
 
-  findAll() {
-    return this.registerCarRepository.find();
+  findAll(userId:any) {
+    return this.registerCarRepository.find({
+      where:{
+        userId,
+      },
+      relations:{
+        user:true,
+      }
+    });
   }
 
-  findOne(id: number) {
-    return this.registerCarRepository.findOneBy({ id });
+  findOne(id: number,userId:any) {
+    return this.registerCarRepository.findOne({ 
+      relations:{
+        user:true,
+      },
+      where:{
+        userId,
+        id,
+      },
+       });
   }
   update(id: number, updateRegisterCarDto: UpdateRegisterCarDto) {
     return this.registerCarRepository.update(id, updateRegisterCarDto);

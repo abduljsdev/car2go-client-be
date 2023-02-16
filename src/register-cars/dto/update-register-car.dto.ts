@@ -4,7 +4,7 @@ import { CarCategories } from "../enum/register.car.enum";
 
 export class UpdateRegisterCarDto {
 
-    userId:number
+    user:any
 
     @IsOptional()
     @IsString()

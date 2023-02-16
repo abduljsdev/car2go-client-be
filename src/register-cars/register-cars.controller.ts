@@ -1,17 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile,BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile,BadRequestException, Req, UseGuards } from '@nestjs/common';
 import { RegisterCarsService } from './register-cars.service';
 import { CreateRegisterCarDto } from './dto/create-register-car.dto';
 import { UpdateRegisterCarDto } from './dto/update-register-car.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { uploadToCloudinary } from 'src/helpers/db-helpers';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('register-cars')
 export class RegisterCarsController {
   constructor(private readonly registerCarsService: RegisterCarsService) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('image'))
- async create(@Body() createRegisterCarDto: CreateRegisterCarDto,@UploadedFile() image: Express.Multer.File,) {    
+ async create(@Body() createRegisterCarDto: CreateRegisterCarDto,@Req() req, @UploadedFile() image: Express.Multer.File,) {    
+     createRegisterCarDto.user = req.user;
+
     if (image) {
 
         const resultImg = await uploadToCloudinary(image.buffer, 'image') as string;
@@ -23,13 +27,15 @@ export class RegisterCarsController {
   }
 
   @Get()
-  findAll() {
-    return this.registerCarsService.findAll();
+  findAll(@Req()req) {
+    const userId = req.user.id;
+    return this.registerCarsService.findAll(userId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.registerCarsService.findOne(+id);
+  findOne(@Param('id') id: string,@Req() req) {
+    const userId = req.user.id;
+    return this.registerCarsService.findOne(+id,userId);
   }
 
   @Patch(':id')

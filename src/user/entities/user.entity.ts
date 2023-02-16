@@ -1,9 +1,11 @@
+import { RegisterCar } from 'src/register-cars/entities/register-car.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
   Index,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -43,6 +45,9 @@ export class User extends BaseEntity {
 
   @Column()
   image:string
+
+  @OneToMany(()=>RegisterCar,(registerCar)=>registerCar.user)
+  registerCars:RegisterCar[]
 
   @CreateDateColumn()
   createdAt: Date;

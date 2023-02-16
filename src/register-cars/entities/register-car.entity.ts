@@ -1,5 +1,6 @@
 import { type } from "os";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/user/entities/user.entity";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { CarCategories } from "../enum/register.car.enum";
 
 
@@ -8,9 +9,6 @@ export class RegisterCar {
 
     @PrimaryGeneratedColumn()
     id:number
-
-    @Column({type:'integer'})
-    userId:number
 
     @Column()
     name:string;
@@ -59,6 +57,19 @@ export class RegisterCar {
 
     @Column()
     image:string
+
+    @ManyToOne(()=>User,(user)=>user.registerCars)
+    user:User
+
+    @Column()
+    userId;
+
+    @CreateDateColumn()
+    createdAt: Date;
+  
+    @UpdateDateColumn()
+    updatedAt: Date; 
+
     
 
 }
