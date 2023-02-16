@@ -4,7 +4,7 @@ import { Type } from 'class-transformer';
 
 export class CreateRegisterCarDto {
 
-    userId:number
+    user:any
 
     @IsNotEmpty()
     @IsString()

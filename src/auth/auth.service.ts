@@ -15,7 +15,7 @@ export class AuthService {
 
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.findUser(email);
-
+   
     if (user) {
       const matchPassword = comparePassword(pass, user.password);
       if (matchPassword) {
@@ -26,8 +26,9 @@ export class AuthService {
     return null;
   }
   findUser(email: string) {
-    return this.userRepository.findOneBy({
-      email,
+    return this.userRepository.findOne({
+      select:['email','password','id'],
+      where:{email}
     });
   }
   async login(payload: any) {
