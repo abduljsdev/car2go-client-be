@@ -1,6 +1,6 @@
-import { type } from "os";
+import { RentedCar } from "src/rented-cars/entities/rented-car.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { CarCategories } from "../enum/register.car.enum";
 
 
@@ -64,12 +64,12 @@ export class RegisterCar {
     @Column()
     userId;
 
+    @OneToMany(()=>RentedCar,(rentedCar)=>rentedCar.car)
+    rented:RentedCar
+
     @CreateDateColumn()
     createdAt: Date;
   
     @UpdateDateColumn()
     updatedAt: Date; 
-
-    
-
 }

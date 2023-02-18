@@ -21,22 +21,6 @@ export class CreateUserDto {
   @IsString()
   password: string;
 
-  @IsNotEmpty()
-  @IsString()
-  phone:number
-
-  @IsNotEmpty()
-  @IsString()
-  address:string
-
-  @IsNotEmpty()
-  @Type(() => Number)
-  age:number
-
-  @IsNotEmpty()
-  @IsString()
-  gender:string
-
   @IsString()
   @IsOptional()
   role: UserType.SELLER | UserType.BUYER;

@@ -39,35 +39,18 @@ export class UserController {
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@Req() req) {
+    console.log(req.user);
+    
     return this.authService.login(req.user);
   }
 
   @Post('signup')
-  @UseInterceptors(FileInterceptor('image'))
   async create(
     @Body() createUserDto: CreateUserDto,
-    @UploadedFile() image: Express.Multer.File,
   ) {
     createUserDto.role = UserType.SELLER;
-
-    if (image) {
-      if (
-        createUserDto.role == 'SELLER' ||
-        createUserDto.role == 'BUYER'
-      ) {
-        const resultImg = await uploadToCloudinary(image.buffer, 'image');
-        const password = enCodePassword(createUserDto.password);
-        return this.userService.create({
-          ...createUserDto,
-          password,
-          ...{ image: resultImg },
-        });
-      } else {
-        throw new BadRequestException('Please enter proper enum type');
-      }
-    } else {
-      throw new BadRequestException('Please upload image');
-    }
+    const password = enCodePassword(createUserDto.password);
+    return this.userService.create({...createUserDto,password})
   }
 
   @Get()
@@ -81,28 +64,11 @@ export class UserController {
   }
 
   @Patch(':id')
-  @UseInterceptors(FileInterceptor('image'))
   async update(
     @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserDto,
-    @UploadedFile() image: Express.Multer.File,
-  ) {
-    if (image) {
-      console.log('image update');
-
-      const logRes = (await uploadToCloudinary(
-        image.buffer,
-        'image',
-      )) as string;
-      return this.userService.update(+id, {
-        ...updateUserDto,
-        ...{ image: logRes },
-      });
-    } else {
-      console.log('image not update');
+    @Body() updateUserDto: UpdateUserDto) {
       return this.userService.update(+id, updateUserDto);
     }
-  }
 
   @Post('reset-password')
   async ResetPassword(

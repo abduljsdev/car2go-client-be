@@ -41,6 +41,16 @@ export class RegisterCarsService {
       },
        });
   }
+  findCar(id: number) {
+    return this.registerCarRepository.findOne({ 
+      relations:{
+        user:true,
+      },
+      where:{
+        id,
+      },
+       });
+  }
   update(id: number, updateRegisterCarDto: UpdateRegisterCarDto) {
     return this.registerCarRepository.update(id, updateRegisterCarDto);
   }

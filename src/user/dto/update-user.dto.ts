@@ -21,22 +21,6 @@ export class UpdateUserDto {
   @IsString()
   password: string;
 
-  @IsOptional()
-  @IsString()
-  phone:number
-
-  @IsOptional()
-  @IsString()
-  address:string
-
-  @IsOptional()
-  @Type(() => Number)
-  age:number
-
-  @IsOptional()
-  @IsString()
-  gender:string
-
   @IsString()
   @IsOptional()
   role:UserType.SELLER | UserType.BUYER;
