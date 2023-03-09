@@ -38,13 +38,11 @@ export class UserController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Req() req) {
-    console.log(req.user);
-    
+  async login(@Req() req) {    
     return this.authService.login(req.user);
   }
 
-  @Post('signup')
+  @Post('sign-up')
   async create(
     @Body() createUserDto: CreateUserDto,
   ) {

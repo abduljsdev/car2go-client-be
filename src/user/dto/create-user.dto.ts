@@ -1,7 +1,6 @@
 
 import { IsString, IsEmail, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
 import { UserType } from '../enum/user.enum';
-import { Type } from 'class-transformer';
 
 export class CreateUserDto {
 

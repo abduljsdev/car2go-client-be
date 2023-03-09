@@ -50,7 +50,7 @@ export class RegisterCar {
     luggageCapacity:number
 
     @Column({type:'integer'})
-    passangerCapcity:number
+    passengerCapacity:number
 
     @Column()
     location:string
