@@ -7,6 +7,7 @@ import { RegisterCar } from './entities/register-car.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([RegisterCar])],
   controllers: [RegisterCarsController],
-  providers: [RegisterCarsService]
+  providers: [RegisterCarsService],
+  exports:[RegisterCarsService]
 })
 export class RegisterCarsModule {}

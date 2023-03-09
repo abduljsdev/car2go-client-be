@@ -1,4 +1,5 @@
 import { RegisterCar } from 'src/register-cars/entities/register-car.entity';
+import { RentedCar } from 'src/rented-cars/entities/rented-car.entity';
 import {
   BaseEntity,
   Column,
@@ -28,26 +29,14 @@ export class User extends BaseEntity {
   @Column({select:false})
   password: string;
 
-  @Column({type:'numeric'})
-  phone:number
-
-  @Column()
-  address:string
-
-  @Column({type:'integer'})
-  age:number
-
-  @Column()
-  gender:string
-
   @Column()
   role: string;
 
-  @Column()
-  image:string
-
   @OneToMany(()=>RegisterCar,(registerCar)=>registerCar.user)
   registerCars:RegisterCar[]
+
+  @OneToMany(()=>RentedCar,(rentedCar)=>rentedCar.buyer)
+  rentedBuyer:RentedCar[]
 
   @CreateDateColumn()
   createdAt: Date;

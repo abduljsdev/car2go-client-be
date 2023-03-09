@@ -7,6 +7,8 @@ import { UserModule } from './user/user.module';
 import { User } from './user/entities/user.entity';
 import { RegisterCarsModule } from './register-cars/register-cars.module';
 import { RegisterCar } from './register-cars/entities/register-car.entity';
+import { RentedCarsModule } from './rented-cars/rented-cars.module';
+import { RentedCar } from './rented-cars/entities/rented-car.entity';
 
 @Module({
   imports: [
@@ -25,7 +27,7 @@ import { RegisterCar } from './register-cars/entities/register-car.entity';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [User,RegisterCar],
+        entities: [User,RegisterCar,RentedCar],
         synchronize: true,
         logging: true,
       }),
@@ -33,6 +35,7 @@ import { RegisterCar } from './register-cars/entities/register-car.entity';
     }),
     UserModule,
     RegisterCarsModule,
+    RentedCarsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
