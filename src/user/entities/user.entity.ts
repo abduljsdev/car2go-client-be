@@ -30,6 +30,12 @@ export class User extends BaseEntity {
   password: string;
 
   @Column()
+  verification_code: string;
+
+  @Column()
+  expiry_time: string;
+
+  @Column()
   role: string;
 
   @OneToMany(()=>RegisterCar,(registerCar)=>registerCar.user)
