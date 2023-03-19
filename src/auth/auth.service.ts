@@ -2,11 +2,11 @@ import { Injectable, NotFoundException,MethodNotAllowedException } from '@nestjs
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
-import { comparePassword } from 'src/helpers/generic-helper';
+import { comparePassword } from 'src/utils/helpers/generic-helper';
 import { Repository } from 'typeorm';
-import { ERROR_MESSAGES } from 'src/constant/generic.constants';
+import { ERROR_MESSAGES } from 'src/utils/constants/generic.constants';
 import { VerificationCodeDto } from './dto/verification.code.dto';
-import { verificationCodeEmailTemplate } from 'src/constants/email-templates';
+import { verificationCodeEmailTemplate } from 'src/utils/constants/email-templates';
 import * as moment from 'moment';
 import handlebars from 'handlebars';
 import { EmailService } from './../shared/email.service';
@@ -60,14 +60,14 @@ export class AuthService {
       verificationCode: verCode,
     };
     const userId = userData.id;
-    var expiryTime = moment().utc().add(2, 'hours').format();
+    var expiryTime = moment().utc().add(1, 'minutes').format();
     const htmlToSend = template(replacements);
     this.emailService.sendMail(email, htmlToSend, 'Confirm Email');
     await this.userRepository.update(userId, {
       verification_code: verCode,
       expiry_time: expiryTime,
     });
-    return true;
+    return {message:"code is send successfully !"};
   }
   async verificationCode(verificationCodeDto: VerificationCodeDto) {
     const userData = await this.userRepository.findOne({

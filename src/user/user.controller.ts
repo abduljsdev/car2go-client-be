@@ -18,17 +18,17 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserType } from './enum/user.enum';
-import { uploadToCloudinary } from 'src/helpers/db-helpers';
+import { uploadToCloudinary } from 'src/utils/helpers/db-helpers';
 import {
   enCodePassword,
   GeneratePassword,
   sendMail,
-} from 'src/helpers/generic-helper';
+} from 'src/utils/helpers/generic-helper';
 import { AuthGuard } from '@nestjs/passport';
 import handlebars from 'handlebars';
-import { FORGET_PASSWORD_EMAIL } from 'src/constants/email-templates';
+import { FORGET_PASSWORD_EMAIL } from 'src/utils/constants/email-templates';
 import { ResetPassword } from './dto/reset-password.dto';
-import { ERROR_MESSAGES } from 'src/constant/generic.constants';
+import { ERROR_MESSAGES } from 'src/utils/constants/generic.constants';
 
 @Controller('user')
 export class UserController {

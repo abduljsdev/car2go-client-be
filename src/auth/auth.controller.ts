@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { enCodePassword } from "src/helpers/generic-helper";
+import { enCodePassword } from "src/utils/helpers/generic-helper";
 import { AuthService } from './auth.service';
 import { ForgetPasswordDto } from "./dto/forget.password.dto";
 import { UpdatePasswordDto } from "./dto/update.password.dto";
