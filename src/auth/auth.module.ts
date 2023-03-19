@@ -6,6 +6,8 @@ import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { User } from 'src/user/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthController } from './auth.controller';
+import { SharedModule } from 'src/shared/shared.module';
 
 @Module({
   imports: [
@@ -15,8 +17,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       secret: 'aroma',
       signOptions: { expiresIn: '1000000s' },
     }),
+
   ],
-  controllers: [],
+  controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],
 })

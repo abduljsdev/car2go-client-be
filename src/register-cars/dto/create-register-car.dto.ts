@@ -58,7 +58,7 @@ export class CreateRegisterCarDto {
     @IsNotEmpty()
     @Type(() => Number)
     @IsNumber()
-    passangerCapcity:number
+    passngerCapcity:number
 
     @IsNotEmpty()
     @IsString()

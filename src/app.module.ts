@@ -9,6 +9,7 @@ import { RegisterCarsModule } from './register-cars/register-cars.module';
 import { RegisterCar } from './register-cars/entities/register-car.entity';
 import { RentedCarsModule } from './rented-cars/rented-cars.module';
 import { RentedCar } from './rented-cars/entities/rented-car.entity';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { RentedCar } from './rented-cars/entities/rented-car.entity';
       }),
       inject: [ConfigService],
     }),
+    SharedModule,
     UserModule,
     RegisterCarsModule,
     RentedCarsModule,

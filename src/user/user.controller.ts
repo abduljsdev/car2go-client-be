@@ -11,41 +11,38 @@ import {
   BadRequestException,
   UseGuards,
   Req,
+  ConflictException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserType } from './enum/user.enum';
-import { uploadToCloudinary } from 'src/helpers/db-helpers';
+import { uploadToCloudinary } from 'src/utils/helpers/db-helpers';
 import {
   enCodePassword,
   GeneratePassword,
   sendMail,
-} from 'src/helpers/generic-helper';
-import { AuthService } from 'src/auth/auth.service';
+} from 'src/utils/helpers/generic-helper';
 import { AuthGuard } from '@nestjs/passport';
 import handlebars from 'handlebars';
-import { FORGET_PASSWORD_EMAIL } from 'src/constants/email-templates';
+import { FORGET_PASSWORD_EMAIL } from 'src/utils/constants/email-templates';
 import { ResetPassword } from './dto/reset-password.dto';
+import { ERROR_MESSAGES } from 'src/utils/constants/generic.constants';
 
 @Controller('user')
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private authService: AuthService,
   ) {}
 
-  @UseGuards(AuthGuard('local'))
-  @Post('login')
-  async login(@Req() req) {    
-    return this.authService.login(req.user);
-  }
 
   @Post('sign-up')
   async create(
     @Body() createUserDto: CreateUserDto,
   ) {
+    const userData = await this.userService.findByEmail(createUserDto.email);
+    if(userData){throw new ConflictException(ERROR_MESSAGES.USER_DUPLICATE  )}
     createUserDto.role = UserType.SELLER;
     const password = enCodePassword(createUserDto.password);
     return this.userService.create({...createUserDto,password})
@@ -67,26 +64,6 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto) {
       return this.userService.update(+id, updateUserDto);
     }
-
-  @Post('reset-password')
-  async ResetPassword(
-    @Param('id') id: string,
-    @Body() resetPassword: ResetPassword,
-  ) {
-    const user = await this.userService.findUser(resetPassword.email);
-    if (user) {
-      const newPassword = GeneratePassword('aA0', 6);
-      const template = handlebars.compile(FORGET_PASSWORD_EMAIL);
-      const replacements = {
-        password: newPassword,
-      };
-
-      const htmlToSend = template(replacements);
-      sendMail(user.email, htmlToSend, 'Your new password');
-      const encryptedPassword = enCodePassword(newPassword);
-      return this.userService.update(user.id, { password: encryptedPassword });
-    }
-  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
