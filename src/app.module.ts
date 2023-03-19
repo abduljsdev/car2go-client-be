@@ -10,6 +10,8 @@ import { RegisterCar } from './register-cars/entities/register-car.entity';
 import { RentedCarsModule } from './rented-cars/rented-cars.module';
 import { RentedCar } from './rented-cars/entities/rented-car.entity';
 import { SharedModule } from './shared/shared.module';
+import { SellerModule } from './seller/seller.module';
+import { BuyerModule } from './buyer/buyer.module';
 
 @Module({
   imports: [
@@ -38,6 +40,8 @@ import { SharedModule } from './shared/shared.module';
     UserModule,
     RegisterCarsModule,
     RentedCarsModule,
+    SellerModule,
+    BuyerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

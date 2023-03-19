@@ -19,9 +19,9 @@ export async function sendMail(email, htmlToSend, title) {
     host: 'smtp.ethereal.email',
     port: 587,
     auth: {
-        user: 'camila.kreiger82@ethereal.email',
-        pass: 'njJTP84NYWE7H7Qjk1'
-    }
+      user: 'camila.kreiger82@ethereal.email',
+      pass: 'njJTP84NYWE7H7Qjk1',
+    },
   });
 
   let info = await transporter.sendMail({
@@ -47,3 +47,14 @@ export function enCodePassword(rawPassword: string) {
 export function comparePassword(rawPassword: string, hash: string) {
   return bcrypt.compareSync(rawPassword, hash);
 }
+
+export const checkFileMineType = (mineType) => {
+  let fileTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/tiff',
+    'image/svg+xml',
+  ];
+  return fileTypes.includes(mineType);
+};

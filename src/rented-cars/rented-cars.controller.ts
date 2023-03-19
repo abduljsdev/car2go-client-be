@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { RentedCarsService } from './rented-cars.service';
 import { CreateRentedCarDto } from './dto/create-rented-car.dto';
 import { UpdateRentedCarDto } from './dto/update-rented-car.dto';
@@ -10,17 +20,16 @@ import { AuthGuard } from '@nestjs/passport';
 export class RentedCarsController {
   constructor(
     private readonly rentedCarsService: RentedCarsService,
-    private registerCarService:RegisterCarsService,
-    ) {}
+    private registerCarService: RegisterCarsService,
+  ) {}
 
   @Post()
- async create(@Body() createRentedCarDto: CreateRentedCarDto,@Req()  req) {
-  
-    const reponseData = await this.registerCarService.findCar(1);
-    console.log(reponseData);
-    
-    createRentedCarDto.car = reponseData;
-    createRentedCarDto.buyer = req.user;    
+  async create(@Body() createRentedCarDto: CreateRentedCarDto, @Req() req) {
+    const responseData = await this.registerCarService.findCar(1);
+    console.log(responseData);
+
+    createRentedCarDto.car = responseData;
+    createRentedCarDto.buyer = req.user;
     createRentedCarDto.status = 'booked';
     return this.rentedCarsService.create(createRentedCarDto);
   }
@@ -32,13 +41,16 @@ export class RentedCarsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string,@Req() req) {
+  findOne(@Param('id') id: string, @Req() req) {
     const buyerId = req.user.id;
-    return this.rentedCarsService.findOne(+id,buyerId);
+    return this.rentedCarsService.findOne(+id, buyerId);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRentedCarDto: UpdateRentedCarDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateRentedCarDto: UpdateRentedCarDto,
+  ) {
     return this.rentedCarsService.update(+id, updateRentedCarDto);
   }
 
