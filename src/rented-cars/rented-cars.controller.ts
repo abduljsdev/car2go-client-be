@@ -26,7 +26,6 @@ export class RentedCarsController {
   @Post()
   async create(@Body() createRentedCarDto: CreateRentedCarDto, @Req() req) {
     const responseData = await this.registerCarService.findCar(1);
-    console.log(responseData);
 
     createRentedCarDto.car = responseData;
     createRentedCarDto.buyer = req.user;

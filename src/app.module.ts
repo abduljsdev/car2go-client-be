@@ -13,6 +13,7 @@ import { SharedModule } from './shared/shared.module';
 import { SellerModule } from './seller/seller.module';
 import { BuyerModule } from './buyer/buyer.module';
 import { Account } from './user/entities/account.entity';
+import { BookingModule } from './booking/booking.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { Account } from './user/entities/account.entity';
     RentedCarsModule,
     SellerModule,
     BuyerModule,
+    BookingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
