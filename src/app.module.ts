@@ -12,6 +12,7 @@ import { RentedCar } from './rented-cars/entities/rented-car.entity';
 import { SharedModule } from './shared/shared.module';
 import { SellerModule } from './seller/seller.module';
 import { BuyerModule } from './buyer/buyer.module';
+import { Account } from './user/entities/account.entity';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { BuyerModule } from './buyer/buyer.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [User,RegisterCar,RentedCar],
+        entities: [User, Account, RegisterCar, RentedCar],
         synchronize: true,
         logging: true,
       }),

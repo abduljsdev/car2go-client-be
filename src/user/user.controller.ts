@@ -103,7 +103,8 @@ export class UserController {
       )) as string;
       createAccountDto.idCardBackImage = resultImg;
     }
-    return createAccountDto;
+
+    return this.userService.createAccount(1, createAccountDto);
   }
 
   @Patch('update-account')
@@ -114,36 +115,43 @@ export class UserController {
     if (_.isEmpty(updateAccountDto)) {
       throw new MethodNotAllowedException();
     }
-    return updateAccountDto;
+
+    return this.userService.updateAccount(1, updateAccountDto);
   }
 
-  @Post('change-password')
+  @Patch('change-password')
   @HttpCode(HttpStatus.OK)
-  updatePassword(@Body() changePasswordDto: ChangePasswordDto) {
-    // const matchPassword = comparePassword(
-    //   '1223',
-    //   changePasswordDto.oldPassword,
-    // );
-    return true;
+  async changePassword(@Body() changePasswordDto: ChangePasswordDto) {
+    const responseData = await this.userService.findPassword(
+      changePasswordDto.email,
+    );
+
+    const matchPassword = comparePassword(
+      changePasswordDto.oldPassword,
+      responseData.password,
+    );
+    console.log(responseData.password, ',', matchPassword);
+
+    if (!matchPassword) {
+      throw new BadRequestException('Password does not match');
+    }
+    changePasswordDto.password = enCodePassword(changePasswordDto.password);
+    return this.userService.changePassword(responseData.id, changePasswordDto);
   }
 
-  @Post('verify-account/:email')
+  @Patch('verify-account/:email')
   verifyAccount(@Param('email') email: string, @Body() body: any) {
-    // const matchPassword = comparePassword(
-    //   '1223',
-    //   changePasswordDto.oldPassword,
-    // );
-    return true;
+    return this.userService.verifyAccount(1);
   }
 
   @Get('all-accounts')
   findAllAccounts() {
-    return true;
+    return this.userService.findAllAccount();
   }
 
   @Get('one-account/:id')
   findOneAccount(@Param('id') id: string) {
-    return true;
+    return this.userService.findOneAccount(+id);
   }
 
   @Get()

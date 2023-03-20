@@ -6,10 +6,13 @@ import {
   CreateDateColumn,
   Entity,
   Index,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Account } from './account.entity';
 
 @Entity('user')
 @Index(['email', 'role'], { unique: true }) // Here
@@ -26,7 +29,7 @@ export class User extends BaseEntity {
   @Column()
   email: string;
 
-  @Column({select:false})
+  @Column({ select: false })
   password: string;
 
   @Column()
@@ -38,15 +41,22 @@ export class User extends BaseEntity {
   @Column()
   role: string;
 
-  @OneToMany(()=>RegisterCar,(registerCar)=>registerCar.user)
-  registerCars:RegisterCar[]
+  @Column({ default: false })
+  isDeleted: boolean;
 
-  @OneToMany(()=>RentedCar,(rentedCar)=>rentedCar.buyer)
-  rentedBuyer:RentedCar[]
+  @OneToOne(() => Account)
+  @JoinColumn()
+  account: Account;
+
+  @OneToMany(() => RegisterCar, (registerCar) => registerCar.user)
+  registerCars: RegisterCar[];
+
+  @OneToMany(() => RentedCar, (rentedCar) => rentedCar.buyer)
+  rentedBuyer: RentedCar[];
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date; 
+  updatedAt: Date;
 }

@@ -1,9 +1,13 @@
-
-import { IsString, IsEmail, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
+import {
+  IsString,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsNumber,
+} from 'class-validator';
 import { UserType } from '../enum/user.enum';
 
 export class CreateUserDto {
-
   @IsString()
   @IsNotEmpty()
   firstName: string;
@@ -23,4 +27,7 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   role: UserType.SELLER | UserType.BUYER;
+
+  @IsOptional()
+  account: any;
 }
