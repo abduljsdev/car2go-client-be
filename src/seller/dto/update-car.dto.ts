@@ -1,65 +1,64 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { CarCategories } from '../../seller/enum/car.enum';
 import { Type } from 'class-transformer';
-
-export class CreateRegisterCarDto {
+import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { CarCategories } from '../enum/car.enum';
+export class UpdateCarDto {
   user: any;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   name: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   brandName: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @Type(() => Number)
   model: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   number: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => Boolean)
   transmission: boolean;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => Number)
   @IsNumber()
   price: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => Number)
   @IsNumber()
   seats: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => Number)
   @IsNumber()
   fuelAverage: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @Type(() => Number)
   doors: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   category: CarCategories.SEDAN | CarCategories.SUV | CarCategories.VAN;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @Type(() => Number)
   luggageCapacity: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  passngerCapcity: number;
+  passengerCapacity: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   location: string;
 

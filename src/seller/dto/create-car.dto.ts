@@ -1,8 +1,10 @@
+export class CreateSellerDto {}
+
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { CarCategories } from '../../seller/enum/car.enum';
+import { CarCategories } from '../enum/car.enum';
 import { Type } from 'class-transformer';
 
-export class CreateRegisterCarDto {
+export class CreateCarDto {
   user: any;
 
   @IsNotEmpty()
@@ -57,7 +59,7 @@ export class CreateRegisterCarDto {
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
-  passngerCapcity: number;
+  passengerCapacity: number;
 
   @IsNotEmpty()
   @IsString()
