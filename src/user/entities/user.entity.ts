@@ -1,5 +1,5 @@
-import { RegisterCar } from 'src/register-cars/entities/register-car.entity';
-import { RentedCar } from 'src/rented-cars/entities/rented-car.entity';
+import { Booking } from 'src/booking/entities/booking.entity';
+import { Car } from 'src/seller/entities/car.entity';
 import {
   BaseEntity,
   Column,
@@ -12,10 +12,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserType } from '../enum/user.enum';
 import { Account } from './account.entity';
 
 @Entity('user')
-@Index(['email', 'role'], { unique: true }) // Here
+@Index(['email', 'role'], { unique: true })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -38,8 +39,11 @@ export class User extends BaseEntity {
   @Column()
   expiry_time: string;
 
-  @Column()
-  role: string;
+  @Column({
+    type: 'enum',
+    enum: UserType,
+  })
+  role: UserType;
 
   @Column({ default: false })
   isDeleted: boolean;
@@ -48,11 +52,11 @@ export class User extends BaseEntity {
   @JoinColumn()
   account: Account;
 
-  @OneToMany(() => RegisterCar, (registerCar) => registerCar.user)
-  registerCars: RegisterCar[];
+  @OneToMany(() => Car, (car) => car.user)
+  car: Car[];
 
-  @OneToMany(() => RentedCar, (rentedCar) => rentedCar.buyer)
-  rentedBuyer: RentedCar[];
+  @OneToMany(() => Booking, (booking) => booking.user)
+  booking: Booking[];
 
   @CreateDateColumn()
   createdAt: Date;

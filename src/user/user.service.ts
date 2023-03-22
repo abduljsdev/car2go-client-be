@@ -2,11 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { CreateAccountDto } from './dto/create-account.dto';
 import { Account } from './entities/account.entity';
-import { UpdateAccountDto } from './dto/update-account.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
@@ -28,15 +25,7 @@ export class UserService {
     });
     return this.userRepository.save(user);
   }
-  createAccount(id: number, createAccountDto: CreateAccountDto) {
-    return this.accountRepository.update(id, createAccountDto);
-  }
-  updateAccount(id: number, updateAccountDto: UpdateAccountDto) {
-    return this.accountRepository.update(id, updateAccountDto);
-  }
-  verifyAccount(id: number) {
-    return this.accountRepository.update(id, { verify: true });
-  }
+
   changePassword(id: number, changePasswordDto: ChangePasswordDto) {
     return this.userRepository.update(id, {
       password: changePasswordDto.password,
@@ -61,30 +50,12 @@ export class UserService {
     });
   }
 
-  findByEmail(email: string) {
+  filterByOptions(options: any) {
     return this.userRepository.findOne({
-      where: {
-        email,
-      },
+      where: options,
     });
   }
 
-  findUser(email: string) {
-    return this.userRepository.findOneBy({
-      email,
-    });
-  }
-  findAllAccount() {
-    return this.userRepository.find();
-  }
-
-  findOneAccount(id: number) {
-    return this.userRepository.findOne({
-      where: {
-        id: id,
-      },
-    });
-  }
   findPassword(email: string) {
     return this.userRepository.findOne({
       where: {

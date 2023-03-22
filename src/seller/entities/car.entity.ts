@@ -1,6 +1,7 @@
-import { RentedCar } from 'src/rented-cars/entities/rented-car.entity';
+import { Booking } from 'src/booking/entities/booking.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
@@ -9,10 +10,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CarCategories } from '../../seller/enum/car.enum';
+import { CarCategories } from '../enum/car.enum';
 
-@Entity('seller')
-export class Seller {
+@Entity('car')
+export class Car extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -64,14 +65,14 @@ export class Seller {
   @Column()
   image: string;
 
-  @ManyToOne(() => User, (user) => user.registerCars)
+  @ManyToOne(() => User, (user) => user.car)
   user: User;
 
   @Column()
   userId;
 
-  @OneToMany(() => RentedCar, (rentedCar) => rentedCar.car)
-  rented: RentedCar;
+  @Column({ default: false })
+  isActive: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

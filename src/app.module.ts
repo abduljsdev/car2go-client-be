@@ -5,15 +5,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { User } from './user/entities/user.entity';
-import { RegisterCarsModule } from './register-cars/register-cars.module';
-import { RegisterCar } from './register-cars/entities/register-car.entity';
-import { RentedCarsModule } from './rented-cars/rented-cars.module';
-import { RentedCar } from './rented-cars/entities/rented-car.entity';
 import { SharedModule } from './shared/shared.module';
 import { SellerModule } from './seller/seller.module';
-import { BuyerModule } from './buyer/buyer.module';
 import { Account } from './user/entities/account.entity';
 import { BookingModule } from './booking/booking.module';
+import { Car } from './seller/entities/car.entity';
+import { Booking } from './booking/entities/booking.entity';
+import { AccountModule } from './account/account.module';
 
 @Module({
   imports: [
@@ -21,7 +19,7 @@ import { BookingModule } from './booking/booking.module';
       imports: [
         ConfigModule.forRoot({
           isGlobal: true,
-          envFilePath: '.local.env',
+          envFilePath: '.env',
           // envFilePath: '.prod.env',
         }),
       ],
@@ -31,8 +29,8 @@ import { BookingModule } from './booking/booking.module';
         port: +configService.get('DB_PORT'),
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_DATABASE'),
-        entities: [User, Account, RegisterCar, RentedCar],
+        database: configService.get('DB_DATABASE_NAME'),
+        entities: [User, Account, Car, Booking],
         synchronize: true,
         logging: true,
       }),
@@ -40,11 +38,9 @@ import { BookingModule } from './booking/booking.module';
     }),
     SharedModule,
     UserModule,
-    RegisterCarsModule,
-    RentedCarsModule,
     SellerModule,
-    BuyerModule,
     BookingModule,
+    AccountModule,
   ],
   controllers: [AppController],
   providers: [AppService],

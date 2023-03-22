@@ -1,12 +1,14 @@
-export class CreateSellerDto {}
-
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  Contains,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsNotEmpty,
+} from 'class-validator';
 import { CarCategories } from '../enum/car.enum';
 import { Type } from 'class-transformer';
 
 export class CreateCarDto {
-  user: any;
-
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -57,8 +59,8 @@ export class CreateCarDto {
   luggageCapacity: number;
 
   @IsNotEmpty()
-  @Type(() => Number)
   @IsNumber()
+  @Type(() => Number)
   passengerCapacity: number;
 
   @IsNotEmpty()
@@ -67,4 +69,7 @@ export class CreateCarDto {
 
   @IsOptional()
   image: string;
+
+  @IsOptional()
+  user: any;
 }

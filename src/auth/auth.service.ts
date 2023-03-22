@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException,MethodNotAllowedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  MethodNotAllowedException,
+  BadRequestException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
@@ -11,8 +16,9 @@ import * as moment from 'moment';
 import handlebars from 'handlebars';
 import { EmailService } from './../shared/email.service';
 import { UpdatePasswordDto } from './dto/update.password.dto';
-const randomize = require('randomatic')
-const _ = require('lodash')
+import { UserType } from 'src/user/enum/user.enum';
+const randomize = require('randomatic');
+const _ = require('lodash');
 
 @Injectable()
 export class AuthService {
@@ -23,22 +29,30 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
-    const user = await this.findUser(email);
-   
-    if (user) {
-      const matchPassword = comparePassword(pass, user.password);
-      if (matchPassword) {
-        const { password, ...result } = user;
-        return result;
+  async validateUser(
+    email: string,
+    pass: string,
+    role: UserType,
+  ): Promise<any> {
+    if (role == UserType.BUYER || role == UserType.SELLER) {
+      const user = await this.findUser(email, role);
+
+      if (user) {
+        const matchPassword = comparePassword(pass, user.password);
+        if (matchPassword) {
+          const { password, ...result } = user;
+          return result;
+        }
       }
+      return null;
+    } else {
+      throw new BadRequestException('Role not empty or invalid');
     }
-    return null;
   }
-  findUser(email: string) {
+  findUser(email: string, role: any) {
     return this.userRepository.findOne({
-      select:['email','password','id'],
-      where:{email}
+      select: ['firstName', 'lastName', 'email', 'password', 'role'],
+      where: { email, role },
     });
   }
   async login(payload: any) {
@@ -49,7 +63,7 @@ export class AuthService {
 
   async forgetPassword(email: string) {
     const userData = await this.userRepository.findOne({
-      where:{email}
+      where: { email },
     });
     if (!userData) {
       throw new NotFoundException(ERROR_MESSAGES.USER_NOT_FOUND);
@@ -67,11 +81,11 @@ export class AuthService {
       verification_code: verCode,
       expiry_time: expiryTime,
     });
-    return {message:"code is send successfully !"};
+    return { message: 'code is send successfully !' };
   }
   async verificationCode(verificationCodeDto: VerificationCodeDto) {
     const userData = await this.userRepository.findOne({
-      where: {email:verificationCodeDto.email}
+      where: { email: verificationCodeDto.email },
     });
     if (!userData) {
       throw new NotFoundException();
@@ -92,7 +106,7 @@ export class AuthService {
   }
   async updatePassword(updatepasswordDto: UpdatePasswordDto) {
     const userData = await this.userRepository.findOne({
-      where: {email:updatepasswordDto.email}
+      where: { email: updatepasswordDto.email },
     });
     const userId = userData.id;
     await this.userRepository.update(userId, {
@@ -100,5 +114,4 @@ export class AuthService {
     });
     return true;
   }
-
 }
