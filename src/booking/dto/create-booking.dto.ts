@@ -5,6 +5,9 @@ export class CreateBookingDto {
   car: any;
 
   @IsOptional()
+  carId: any;
+
+  @IsOptional()
   buyer: any;
 
   @IsOptional()

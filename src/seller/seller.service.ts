@@ -12,8 +12,6 @@ export class SellerService {
     private readonly carRepository: Repository<Car>,
   ) {}
   create(createCarDto: CreateCarDto) {
-    console.log(createCarDto);
-
     const registerCar = this.carRepository.create({
       ...createCarDto,
     });
@@ -49,8 +47,19 @@ export class SellerService {
       },
     });
   }
+  filterOneCar(options: any) {
+    return this.carRepository.findOne({
+      relations: {
+        user: true,
+      },
+      where: options,
+    });
+  }
   update(id: number, updateCartDo: UpdateCarDto) {
     return this.carRepository.update(id, updateCartDo);
+  }
+  updateWithOptions(id: number, options: any) {
+    return this.carRepository.update(id, options);
   }
 
   remove(id: number) {

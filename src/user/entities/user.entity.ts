@@ -55,7 +55,7 @@ export class User extends BaseEntity {
   @OneToMany(() => Car, (car) => car.user)
   car: Car[];
 
-  @OneToMany(() => Booking, (booking) => booking.user)
+  @OneToMany(() => Booking, (booking) => booking.buyer)
   booking: Booking[];
 
   @CreateDateColumn()

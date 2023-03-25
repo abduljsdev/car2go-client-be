@@ -44,10 +44,10 @@ export class Booking extends BaseEntity {
   carId;
 
   @ManyToOne(() => User, (user) => user.booking)
-  user: User;
+  buyer: User;
 
   @Column()
-  userId;
+  buyerId;
 
   @CreateDateColumn()
   createdAt: Date;
