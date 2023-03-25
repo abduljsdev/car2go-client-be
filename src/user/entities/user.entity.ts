@@ -1,3 +1,4 @@
+import { Account } from 'src/account/entities/account.entity';
 import { Booking } from 'src/booking/entities/booking.entity';
 import { Car } from 'src/seller/entities/car.entity';
 import {
@@ -13,7 +14,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UserType } from '../enum/user.enum';
-import { Account } from './account.entity';
 
 @Entity('user')
 @Index(['email', 'role'], { unique: true })

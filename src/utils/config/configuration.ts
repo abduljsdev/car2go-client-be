@@ -5,11 +5,10 @@ export default () => ({
   },
   database: {
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
+    port: parseInt(process.env.DB_PORT),
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     databaseName: process.env.DB_DATABASE_NAME,
-    sync: process.env.DB_SYNC,
   },
 
   cloudinary: {

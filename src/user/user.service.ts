@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
-import { Account } from './entities/account.entity';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { Account } from 'src/account/entities/account.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -34,9 +35,6 @@ export class UserService {
   findAll() {
     return this.userRepository.find({
       where: { isDeleted: false },
-      relations: {
-        account: true,
-      },
     });
   }
 
@@ -46,13 +44,25 @@ export class UserService {
         id: id,
         isDeleted: false,
       },
-      relations: { account: true },
     });
   }
 
-  filterByOptions(options: any) {
+  filterOne(options: any) {
     return this.userRepository.findOne({
       where: options,
+    });
+  }
+
+  filterAll(options: any) {
+    return this.userRepository.find({
+      where: options,
+    });
+  }
+
+  findLogin(options: any) {
+    return this.userRepository.findOne({
+      where: options,
+      select: ['firstName', 'lastName', 'email', 'password', 'role'],
     });
   }
 
@@ -60,14 +70,20 @@ export class UserService {
     return this.userRepository.findOne({
       where: {
         email: email,
+        isDeleted: false,
       },
-      select: ['id', 'password'],
+      select: ['password'],
     });
   }
-  update(id: number, updateUserDto: any) {
+  update(id: number, updateUserDto: UpdateUserDto) {
+    return this.userRepository.update(id, {
+      firstName: updateUserDto.firstName,
+      lastName: updateUserDto.lastName,
+    });
+  }
+  updateWithOption(id: number, updateUserDto: any) {
     return this.userRepository.update(id, updateUserDto);
   }
-
   remove(id: number) {
     return this.userRepository.update(id, { isDeleted: true });
   }

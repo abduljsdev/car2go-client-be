@@ -4,7 +4,7 @@ import { UserController } from './user.controller';
 import { User } from './entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
-import { Account } from './entities/account.entity';
+import { Account } from 'src/account/entities/account.entity';
 
 @Global()
 @Module({

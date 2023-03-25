@@ -9,8 +9,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { UserType } from 'src/user/enum/user.enum';
 import { UserService } from 'src/user/user.service';
 import { ERROR_MESSAGES } from 'src/utils/constants/generic.constants';
 import { enCodePassword } from 'src/utils/helpers/generic-helper';
@@ -35,12 +33,11 @@ export class AuthController {
   }
   @Post('register')
   async create(@Body() registerUserDto: RegisterUserDto) {
-    const userData = await this.userService.filterByOptions({
+    const userData = await this.userService.filterOne({
       email: registerUserDto.email,
       role: registerUserDto.role,
+      isDeleted: false,
     });
-    console.log(userData, '111111111');
-
     if (userData) {
       throw new ConflictException(ERROR_MESSAGES.USER_DUPLICATE);
     }

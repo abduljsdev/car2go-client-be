@@ -1,12 +1,13 @@
-import { Booking } from 'src/booking/entities/booking.entity';
+import { Account } from 'src/account/entities/account.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
-  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -65,14 +66,18 @@ export class Car extends BaseEntity {
   @Column()
   image: string;
 
+  @Column({ default: false })
+  isActive: boolean;
+
   @ManyToOne(() => User, (user) => user.car)
   user: User;
 
   @Column()
   userId;
 
-  @Column({ default: false })
-  isActive: boolean;
+  @OneToOne(() => Account)
+  @JoinColumn()
+  car: Account;
 
   @CreateDateColumn()
   createdAt: Date;

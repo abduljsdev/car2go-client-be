@@ -12,8 +12,10 @@ import {
   UnsupportedMediaTypeException,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { uploadToCloudinary } from 'src/utils/helpers/db-helpers';
-import { checkFileMineType } from 'src/utils/helpers/generic-helper';
+import {
+  checkFileMineType,
+  uploadToCloudinary,
+} from 'src/utils/helpers/generic-helper';
 import { AccountService } from './account.service';
 import { UpdateAccountDto } from './dto/update-account.dto';
 var mime = require('mime-types');

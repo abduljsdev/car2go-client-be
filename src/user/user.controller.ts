@@ -10,6 +10,7 @@ import {
   ConflictException,
   HttpCode,
   HttpStatus,
+  NotFoundException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -29,8 +30,9 @@ export class UserController {
 
   @Post('sign-up')
   async create(@Body() createUserDto: CreateUserDto) {
-    const userData = await this.userService.filterByOptions({
+    const userData = await this.userService.filterOne({
       email: createUserDto.email,
+      isDeleted: false,
     });
     if (userData) {
       throw new ConflictException(ERROR_MESSAGES.USER_DUPLICATE);
@@ -50,7 +52,6 @@ export class UserController {
       changePasswordDto.oldPassword,
       responseData.password,
     );
-    console.log(responseData.password, ',', matchPassword);
 
     if (!matchPassword) {
       throw new BadRequestException('Password does not match');
@@ -65,17 +66,29 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const userData = await this.userService.findOne(+id);
+    if (!userData) {
+      throw new NotFoundException();
+    }
+    return userData;
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    const userData = await this.userService.findOne(+id);
+    if (!userData) {
+      throw new NotFoundException();
+    }
     return this.userService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
+    const userData = await this.userService.findOne(+id);
+    if (!userData) {
+      throw new NotFoundException();
+    }
     return this.userService.remove(+id);
   }
 }

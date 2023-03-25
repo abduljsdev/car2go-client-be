@@ -4,33 +4,28 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import { User } from './user/entities/user.entity';
 import { SharedModule } from './shared/shared.module';
 import { SellerModule } from './seller/seller.module';
-import { Account } from './user/entities/account.entity';
 import { BookingModule } from './booking/booking.module';
-import { Car } from './seller/entities/car.entity';
-import { Booking } from './booking/entities/booking.entity';
 import { AccountModule } from './account/account.module';
+import configuration from './utils/config/configuration';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      load: [configuration],
+      isGlobal: true,
+    }),
     TypeOrmModule.forRootAsync({
-      imports: [
-        ConfigModule.forRoot({
-          isGlobal: true,
-          envFilePath: '.env',
-          // envFilePath: '.prod.env',
-        }),
-      ],
       useFactory: (configService: ConfigService) => ({
         type: 'mysql',
-        host: configService.get('DB_HOST'),
-        port: +configService.get('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_DATABASE_NAME'),
-        entities: [User, Account, Car, Booking],
+        host: configService.get('database.host'),
+        port: configService.get('database.port'),
+        username: configService.get('database.username'),
+        password: configService.get('database.password'),
+        database: configService.get('database.databaseName'),
+        entities: ['dist/**/*.entity{.ts,.js}'],
         synchronize: true,
         logging: true,
       }),

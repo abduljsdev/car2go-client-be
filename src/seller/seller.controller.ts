@@ -15,8 +15,10 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { uploadToCloudinary } from 'src/utils/helpers/db-helpers';
-import { checkFileMineType } from 'src/utils/helpers/generic-helper';
+import {
+  checkFileMineType,
+  uploadToCloudinary,
+} from 'src/utils/helpers/generic-helper';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { SellerService } from './seller.service';
