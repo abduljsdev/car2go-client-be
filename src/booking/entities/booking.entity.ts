@@ -1,3 +1,4 @@
+import { type } from 'os';
 import { BookingStatus } from 'src/auth/enum/status.enum';
 import { Car } from 'src/seller/entities/car.entity';
 import { User } from 'src/user/entities/user.entity';
@@ -18,8 +19,12 @@ export class Booking extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: BookingStatus.PENDING })
-  status: string;
+  @Column({
+    type: 'enum',
+    enum: BookingStatus,
+    default: BookingStatus.PENDING,
+  })
+  status: BookingStatus;
 
   @Column()
   location: string;

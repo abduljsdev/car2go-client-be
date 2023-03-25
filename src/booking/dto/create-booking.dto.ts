@@ -9,7 +9,4 @@ export class CreateBookingDto {
 
   @IsOptional()
   buyer: any;
-
-  @IsOptional()
-  status: string;
 }
