@@ -52,7 +52,7 @@ export class AuthService {
   }
   async login(payload: any) {
     return {
-      access_token: this.jwtService.sign(payload, { secret: 'aroma' }),
+      access_token: this.jwtService.sign({ ...payload }),
     };
   }
 

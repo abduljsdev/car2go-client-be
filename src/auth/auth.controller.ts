@@ -41,8 +41,8 @@ export class AuthController {
     if (userData) {
       throw new ConflictException(ERROR_MESSAGES.USER_DUPLICATE);
     }
-    const password = enCodePassword(registerUserDto.password);
-    return this.userService.create({ ...registerUserDto, password });
+    registerUserDto.password = enCodePassword(registerUserDto.password);
+    return this.userService.create(registerUserDto);
   }
   @Post('forget-password')
   forgetPassword(@Body() forgetPasswordDto: ForgetPasswordDto) {

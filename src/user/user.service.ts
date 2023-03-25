@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { Account } from 'src/account/entities/account.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { RegisterUserDto } from 'src/auth/dto/register.user.dto';
 
 @Injectable()
 export class UserService {
@@ -16,13 +16,13 @@ export class UserService {
     private readonly accountRepository: Repository<Account>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(registerUserDto: RegisterUserDto) {
     //create empty Account
     const account = new Account();
     const responseAccount = await this.accountRepository.save(account);
-    createUserDto.account = responseAccount;
+    registerUserDto.account = responseAccount;
     const user = this.userRepository.create({
-      ...createUserDto,
+      ...registerUserDto,
     });
     return this.userRepository.save(user);
   }
@@ -35,6 +35,9 @@ export class UserService {
   findAll() {
     return this.userRepository.find({
       where: { isDeleted: false },
+      relations: {
+        account: true,
+      },
     });
   }
 
@@ -43,6 +46,9 @@ export class UserService {
       where: {
         id: id,
         isDeleted: false,
+      },
+      relations: {
+        account: true,
       },
     });
   }
@@ -62,7 +68,7 @@ export class UserService {
   findLogin(options: any) {
     return this.userRepository.findOne({
       where: options,
-      select: ['firstName', 'lastName', 'email', 'password', 'role'],
+      select: ['id', 'firstName', 'lastName', 'email', 'password', 'role'],
     });
   }
 

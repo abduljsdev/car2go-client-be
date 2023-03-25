@@ -12,6 +12,8 @@ export class SellerService {
     private readonly carRepository: Repository<Car>,
   ) {}
   create(createCarDto: CreateCarDto) {
+    console.log(createCarDto);
+
     const registerCar = this.carRepository.create({
       ...createCarDto,
     });
@@ -27,8 +29,6 @@ export class SellerService {
   }
 
   findOne(id: number, userId: any) {
-    console.log(id, ',', userId);
-
     return this.carRepository.findOne({
       where: {
         userId,

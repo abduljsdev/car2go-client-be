@@ -12,9 +12,12 @@ import {
   BadRequestException,
   UploadedFile,
   UnsupportedMediaTypeException,
+  NotFoundException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UserType } from 'src/user/enum/user.enum';
+import { RoleGuard } from 'src/utils/guards/role.guard';
 import {
   checkFileMineType,
   uploadToCloudinary,
@@ -59,18 +62,29 @@ export class SellerController {
   }
 
   @Get('car/:id')
-  findOne(@Param('id') id: string, @Req() req) {
+  async findOne(@Param('id') id: string, @Req() req) {
     const userId = req.user.id;
-    return this.sellerService.findOne(+id, userId);
+    const carData = await this.sellerService.findOne(+id, userId);
+    if (!carData) {
+      throw new NotFoundException();
+    }
+    return carData;
   }
 
   @Patch('update-car/:id')
   @UseInterceptors(FileInterceptor('image'))
   async update(
+    @Req() req,
     @Param('id') id: string,
     @Body() updateCarDto: UpdateCarDto,
     @UploadedFile() image: Express.Multer.File,
   ) {
+    console.log(updateCarDto);
+    const userId = req.user.id;
+    const carData = await this.sellerService.findOne(+id, userId);
+    if (!carData) {
+      throw new NotFoundException();
+    }
     if (image) {
       const logRes = (await uploadToCloudinary(
         image.buffer,

@@ -18,7 +18,7 @@ export async function sendMail(email, htmlToSend, title) {
   });
 
   let info = await transporter.sendMail({
-    from: 'Aroma Survey <car2go@gmail.com>',
+    from: 'Car2Go <car2go@gmail.com>',
     to: `${email}`,
     subject: title,
     html: htmlToSend,

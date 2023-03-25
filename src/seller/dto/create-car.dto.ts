@@ -1,10 +1,4 @@
-import {
-  Contains,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsNotEmpty,
-} from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsNotEmpty } from 'class-validator';
 import { CarCategories } from '../enum/car.enum';
 import { Type } from 'class-transformer';
 
