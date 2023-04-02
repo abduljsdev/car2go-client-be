@@ -10,6 +10,8 @@ import {
   UploadedFiles,
   MethodNotAllowedException,
   UnsupportedMediaTypeException,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import {
@@ -20,8 +22,10 @@ import { AccountService } from './account.service';
 import { UpdateAccountDto } from './dto/update-account.dto';
 var mime = require('mime-types');
 import * as _ from 'lodash';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('account')
+@UseGuards(AuthGuard('jwt'))
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
@@ -35,7 +39,7 @@ export class AccountController {
     return this.accountService.findOne(+id);
   }
 
-  @Patch()
+  @Patch(':id')
   @UseInterceptors(
     FileFieldsInterceptor([
       { name: 'idCardFrontImage', maxCount: 1 },
@@ -78,7 +82,7 @@ export class AccountController {
       )) as string;
       updateAccountDto.idCardBackImage = resultImg;
     }
-    return this.accountService.update(1, updateAccountDto);
+    return this.accountService.update(+id, updateAccountDto);
   }
   @Patch('verify/:email')
   verify(@Param('email') email: string, @Body() body: any) {

@@ -15,36 +15,37 @@ export class UpdateAccountDto {
   firstName: string;
 
   @IsOptional()
-  @Contains('', { message: 'FirstName is not empty' })
+  @Contains('', { message: 'LastName is not empty' })
   @IsString()
   lastName: string;
 
   @IsOptional()
-  @Contains('', { message: 'FirstName is not empty' })
+  @Contains('', { message: 'Date of birth is not empty' })
   @IsString()
   dateOfBirth: string;
 
   @IsOptional()
+  @Contains('', { message: 'City is not empty' })
   @IsString()
   city: string;
 
   @IsOptional()
-  @Contains('', { message: 'FirstName is not empty' })
+  @Contains('', { message: 'street is not empty' })
   @IsString()
   street: string;
 
   @IsOptional()
-  @Contains('', { message: 'FirstName is not empty' })
+  @Contains('', { message: 'Phone number is not empty' })
   @IsString()
   @MinLength(11)
   @MaxLength(11)
   phoneNumber: string;
 
   @IsOptional()
-  @Contains('', { message: 'FirstName is not empty' })
+  @Contains('', { message: 'CNIC Number is not empty' })
   @IsString()
-  @MinLength(12)
-  @MaxLength(12)
+  @MinLength(13)
+  @MaxLength(13)
   cnicNumber: string;
 
   @IsOptional()
@@ -54,10 +55,4 @@ export class UpdateAccountDto {
   @IsOptional()
   @IsString()
   idCardBackImage: string;
-
-  @IsOptional()
-  @Contains('', { message: 'FirstName is not empty' })
-  @Type(() => Boolean)
-  @IsBoolean()
-  verify: boolean;
 }

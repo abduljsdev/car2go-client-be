@@ -37,7 +37,6 @@ export class AuthService {
         role: role,
         isDeleted: false,
       });
-
       if (user) {
         const matchPassword = comparePassword(pass, user.password);
         if (matchPassword) {

@@ -6,9 +6,8 @@ import {
   Param,
   Delete,
   BadRequestException,
-  HttpCode,
-  HttpStatus,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -18,15 +17,19 @@ import {
 } from 'src/utils/helpers/generic-helper';
 import * as _ from 'lodash';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { AuthGuard } from '@nestjs/passport';
 var mime = require('mime-types');
 
 @Controller('user')
+@UseGuards(AuthGuard('jwt'))
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Patch('change-password')
-  @HttpCode(HttpStatus.OK)
-  async changePassword(@Body() changePasswordDto: ChangePasswordDto) {
+  @Patch('change-password/:id')
+  async changePassword(
+    @Param('id') id: string,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ) {
     const responseData = await this.userService.findPassword(
       changePasswordDto.email,
     );
@@ -40,7 +43,7 @@ export class UserController {
       throw new BadRequestException('Password does not match');
     }
     changePasswordDto.password = enCodePassword(changePasswordDto.password);
-    return this.userService.changePassword(responseData.id, changePasswordDto);
+    return this.userService.changePassword(+id, changePasswordDto);
   }
 
   @Get()

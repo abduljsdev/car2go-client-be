@@ -38,6 +38,7 @@ export class AuthController {
       role: registerUserDto.role,
       isDeleted: false,
     });
+
     if (userData) {
       throw new ConflictException(ERROR_MESSAGES.USER_DUPLICATE);
     }
@@ -45,7 +46,8 @@ export class AuthController {
     return this.userService.create(registerUserDto);
   }
   @Post('forget-password')
-  forgetPassword(@Body() forgetPasswordDto: ForgetPasswordDto) {
+  @UseGuards(AuthGuard('jwt'))
+  forgetPassword(@Body() forgetPasswordDto: ForgetPasswordDto, @Req() req) {
     return this.authService.forgetPassword(forgetPasswordDto.email);
   }
   @Post('verification-code')

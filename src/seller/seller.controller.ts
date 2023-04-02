@@ -79,7 +79,6 @@ export class SellerController {
     @Body() updateCarDto: UpdateCarDto,
     @UploadedFile() image: Express.Multer.File,
   ) {
-    console.log(updateCarDto);
     const userId = req.user.id;
     const carData = await this.sellerService.findOne(+id, userId);
     if (!carData) {

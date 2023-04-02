@@ -69,6 +69,9 @@ export class UserService {
     return this.userRepository.findOne({
       where: options,
       select: ['id', 'firstName', 'lastName', 'email', 'password', 'role'],
+      relations: {
+        account: true,
+      },
     });
   }
 
