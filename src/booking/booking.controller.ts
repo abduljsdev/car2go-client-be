@@ -9,19 +9,24 @@ import {
   UseGuards,
   Req,
   BadRequestException,
+  NotFoundException,
+  ConflictException,
 } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { SellerService } from './../seller/seller.service';
+import { DriverService } from 'src/driver/driver.service';
+import { UserService } from 'src/user/user.service';
 
 @Controller('booking')
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 export class BookingController {
   constructor(
     private readonly bookingService: BookingService,
     private readonly sellerService: SellerService,
+    private readonly userService: UserService,
   ) {}
 
   @Post()
@@ -31,10 +36,12 @@ export class BookingController {
       isActive: false,
     });
     if (!carData) {
-      throw new BadRequestException('already book');
+      throw new ConflictException('This Car already book');
     }
-    createBookingDto.buyer = req.user;
+    const userData = await this.userService.findOne(+2);
+    createBookingDto.buyer = userData;
     createBookingDto.car = carData;
+    createBookingDto.driver = createBookingDto.driverId;
     const bookingData = await this.bookingService.create(createBookingDto);
     if (bookingData) {
       await this.sellerService.updateWithOptions(createBookingDto.carId, {
@@ -42,6 +49,7 @@ export class BookingController {
       });
     }
     return bookingData;
+    // return true;
   }
 
   @Get()

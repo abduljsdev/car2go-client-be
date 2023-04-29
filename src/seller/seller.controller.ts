@@ -13,6 +13,7 @@ import {
   UploadedFile,
   UnsupportedMediaTypeException,
   NotFoundException,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -28,7 +29,7 @@ import { SellerService } from './seller.service';
 var mime = require('mime-types');
 
 @Controller('seller')
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 export class SellerController {
   constructor(private readonly sellerService: SellerService) {}
 
@@ -71,6 +72,15 @@ export class SellerController {
     return carData;
   }
 
+  @Get('show/:id')
+  async show(@Param('id') id: string) {
+    const carData = await this.sellerService.show(+id);
+    if (!carData) {
+      throw new NotFoundException();
+    }
+    return carData;
+  }
+
   @Patch('update-car/:id')
   @UseInterceptors(FileInterceptor('image'))
   async update(
@@ -101,5 +111,21 @@ export class SellerController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.sellerService.remove(+id);
+  }
+
+  @Get('filter-by-radius')
+  findWithinRadius(
+    @Query()
+    queryParams: {
+      latitude: string;
+      longitude: string;
+      radius: number;
+    },
+  ) {
+    return this.sellerService.findWithinRadius(
+      +queryParams.latitude,
+      +queryParams.longitude,
+      queryParams.radius,
+    );
   }
 }

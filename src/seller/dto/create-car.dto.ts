@@ -64,6 +64,12 @@ export class CreateCarDto {
   @IsOptional()
   image: string;
 
+  @IsNotEmpty()
+  latitude: string;
+
+  @IsNotEmpty()
+  longitude: string;
+
   @IsOptional()
   user: any;
 }

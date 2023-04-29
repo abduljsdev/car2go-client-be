@@ -37,6 +37,9 @@ export class SellerService {
       },
     });
   }
+  show(id: number) {
+    return this.carRepository.findOneBy({ id });
+  }
   findCar(id: number) {
     return this.carRepository.findOne({
       relations: {
@@ -64,5 +67,33 @@ export class SellerService {
 
   remove(id: number) {
     return this.carRepository.delete(id);
+  }
+
+  async findWithinRadius(lat: number, lon: number, radius: number) {
+    const earthRadius = 6371; // km
+    const maxLat = lat + (radius / earthRadius) * (180 / Math.PI);
+    const minLat = lat - (radius / earthRadius) * (180 / Math.PI);
+    const maxLon =
+      lon +
+      ((radius / earthRadius) * (180 / Math.PI)) /
+        Math.cos((lat * Math.PI) / 180);
+    const minLon =
+      lon -
+      ((radius / earthRadius) * (180 / Math.PI)) /
+        Math.cos((lat * Math.PI) / 180);
+
+    const query = this.carRepository
+      .createQueryBuilder('car')
+      .select()
+      .where('car.latitude BETWEEN :minLat AND :maxLat', {
+        minLat,
+        maxLat,
+      })
+      .andWhere('car.longitude BETWEEN :minLon AND :maxLon', {
+        minLon,
+        maxLon,
+      });
+
+    return await query.getMany();
   }
 }

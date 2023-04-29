@@ -66,6 +66,12 @@ export class Car extends BaseEntity {
   @Column()
   image: string;
 
+  @Column()
+  latitude: string;
+
+  @Column()
+  longitude: string;
+
   @Column({ default: false })
   isActive: boolean;
 

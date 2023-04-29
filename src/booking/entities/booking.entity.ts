@@ -1,5 +1,5 @@
-import { type } from 'os';
 import { BookingStatus } from 'src/auth/enum/status.enum';
+import { Driver } from 'src/driver/entities/driver.entity';
 import { Car } from 'src/seller/entities/car.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
@@ -27,13 +27,16 @@ export class Booking extends BaseEntity {
   status: BookingStatus;
 
   @Column()
-  location: string;
+  pickUpLocation: string;
 
   @Column()
-  deliverDate: string;
+  pickUpDate: string;
 
   @Column()
-  deliverTime: string;
+  pickUpTime: string;
+
+  @Column()
+  returnLocation: string;
 
   @Column()
   returnDate: string;
@@ -53,6 +56,13 @@ export class Booking extends BaseEntity {
 
   @Column()
   buyerId;
+
+  @OneToOne(() => Driver)
+  @JoinColumn()
+  driver: Driver;
+
+  @Column()
+  driverId;
 
   @CreateDateColumn()
   createdAt: Date;

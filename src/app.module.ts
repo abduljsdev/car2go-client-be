@@ -8,6 +8,9 @@ import { SharedModule } from './shared/shared.module';
 import { SellerModule } from './seller/seller.module';
 import { BookingModule } from './booking/booking.module';
 import { AccountModule } from './account/account.module';
+import { PaymentModule } from './payment/payment.module';
+import { BlogModule } from './blog/blog.module';
+import { DriverModule } from './driver/driver.module';
 import configuration from './utils/config/configuration';
 
 @Module({
@@ -36,6 +39,9 @@ import configuration from './utils/config/configuration';
     SellerModule,
     BookingModule,
     AccountModule,
+    PaymentModule,
+    BlogModule,
+    DriverModule,
   ],
   controllers: [AppController],
   providers: [AppService],
