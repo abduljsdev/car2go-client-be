@@ -21,10 +21,16 @@ ${EMAIL_TEMPLATES_HEADER}
 ${EMAIL_TEMPLATES_FOOTER}
 `;
 
-
 export const verificationCodeEmailTemplate = `${EMAIL_TEMPLATES_HEADER}
 <div style="width:50%;margin:2% auto;padding:30px;border-radius:5px;border:2px solid rgb(160, 160, 160);">
 <h2>verification code.</h2>
 <p>{{verificationCode}}</p>
+</div>
+${EMAIL_TEMPLATES_FOOTER}`;
+
+export const accountVerificationTemplate = `${EMAIL_TEMPLATES_HEADER}
+<div style="width:50%;margin:2% auto;padding:30px;border-radius:5px;border:2px solid rgb(160, 160, 160);">
+<h2>Car2Go</h2>
+<p>Your account is verified.</p>
 </div>
 ${EMAIL_TEMPLATES_FOOTER}`;

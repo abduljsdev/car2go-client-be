@@ -1,51 +1,49 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
   Delete,
-  UseInterceptors,
-  UploadedFile,
   BadRequestException,
+  NotFoundException,
   UseGuards,
-  Req,
-  ConflictException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { UserType } from './enum/user.enum';
-import { uploadToCloudinary } from 'src/utils/helpers/db-helpers';
 import {
+  comparePassword,
   enCodePassword,
-  GeneratePassword,
-  sendMail,
 } from 'src/utils/helpers/generic-helper';
+import * as _ from 'lodash';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { AuthGuard } from '@nestjs/passport';
-import handlebars from 'handlebars';
-import { FORGET_PASSWORD_EMAIL } from 'src/utils/constants/email-templates';
-import { ResetPassword } from './dto/reset-password.dto';
-import { ERROR_MESSAGES } from 'src/utils/constants/generic.constants';
+var mime = require('mime-types');
 
 @Controller('user')
+@UseGuards(AuthGuard('jwt'))
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
-
-  @Post('sign-up')
-  async create(
-    @Body() createUserDto: CreateUserDto,
+  @Patch('change-password/:id')
+  async changePassword(
+    @Param('id') id: string,
+    @Body() changePasswordDto: ChangePasswordDto,
   ) {
-    const userData = await this.userService.findByEmail(createUserDto.email);
-    if(userData){throw new ConflictException(ERROR_MESSAGES.USER_DUPLICATE  )}
-    createUserDto.role = UserType.SELLER;
-    const password = enCodePassword(createUserDto.password);
-    return this.userService.create({...createUserDto,password})
+    const responseData = await this.userService.findPassword(
+      changePasswordDto.email,
+    );
+
+    const matchPassword = comparePassword(
+      changePasswordDto.oldPassword,
+      responseData.password,
+    );
+
+    if (!matchPassword) {
+      throw new BadRequestException('Password does not match');
+    }
+    changePasswordDto.password = enCodePassword(changePasswordDto.password);
+    return this.userService.changePassword(+id, changePasswordDto);
   }
 
   @Get()
@@ -54,19 +52,29 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const userData = await this.userService.findOne(+id);
+    if (!userData) {
+      throw new NotFoundException();
+    }
+    return userData;
   }
 
   @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserDto) {
-      return this.userService.update(+id, updateUserDto);
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    const userData = await this.userService.findOne(+id);
+    if (!userData) {
+      throw new NotFoundException();
     }
+    return this.userService.update(+id, updateUserDto);
+  }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
+    const userData = await this.userService.findOne(+id);
+    if (!userData) {
+      throw new NotFoundException();
+    }
     return this.userService.remove(+id);
   }
 }

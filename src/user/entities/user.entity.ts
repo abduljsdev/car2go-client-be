@@ -1,18 +1,22 @@
-import { RegisterCar } from 'src/register-cars/entities/register-car.entity';
-import { RentedCar } from 'src/rented-cars/entities/rented-car.entity';
+import { Account } from 'src/account/entities/account.entity';
+import { Booking } from 'src/booking/entities/booking.entity';
+import { Car } from 'src/seller/entities/car.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
   Index,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserType } from '../enum/user.enum';
 
 @Entity('user')
-@Index(['email', 'role'], { unique: true }) // Here
+@Index(['email', 'role'], { unique: true })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -26,7 +30,7 @@ export class User extends BaseEntity {
   @Column()
   email: string;
 
-  @Column({select:false})
+  @Column({ select: false })
   password: string;
 
   @Column()
@@ -35,18 +39,28 @@ export class User extends BaseEntity {
   @Column()
   expiry_time: string;
 
-  @Column()
-  role: string;
+  @Column({
+    type: 'enum',
+    enum: UserType,
+  })
+  role: UserType;
 
-  @OneToMany(()=>RegisterCar,(registerCar)=>registerCar.user)
-  registerCars:RegisterCar[]
+  @Column({ default: false })
+  isDeleted: boolean;
 
-  @OneToMany(()=>RentedCar,(rentedCar)=>rentedCar.buyer)
-  rentedBuyer:RentedCar[]
+  @OneToOne(() => Account)
+  @JoinColumn()
+  account: Account;
+
+  @OneToMany(() => Car, (car) => car.user)
+  car: Car[];
+
+  @OneToMany(() => Booking, (booking) => booking.buyer)
+  booking: Booking[];
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date; 
+  updatedAt: Date;
 }
