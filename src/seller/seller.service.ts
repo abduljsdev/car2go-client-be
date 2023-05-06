@@ -26,6 +26,18 @@ export class SellerService {
     });
   }
 
+  async findAllWithUser(userId: number) {
+    const data = await this.carRepository.find({
+      where: {
+        userId,
+      },
+      relations: {
+        user: true,
+      },
+    });
+    return data;
+  }
+
   findOne(id: number, userId: any) {
     return this.carRepository.findOne({
       where: {

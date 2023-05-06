@@ -111,4 +111,17 @@ export class AuthService {
     });
     return true;
   }
+
+  async refreshToken(email: string, role: UserType) {
+    console.log(email, role, '111111111111111');
+
+    const refreshUser = await this.userService.findLogin({
+      email: email,
+      role: role,
+      isDeleted: false,
+    });
+    console.log(refreshUser, '222222222222222');
+
+    return this.login(refreshUser);
+  }
 }

@@ -44,7 +44,7 @@ export class Booking extends BaseEntity {
   @Column()
   returnTime: string;
 
-  @OneToOne(() => Car)
+  @OneToOne(() => Car, { onDelete: 'CASCADE', cascade: true })
   @JoinColumn()
   car: Car;
 

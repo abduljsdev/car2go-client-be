@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
@@ -12,6 +11,7 @@ import {
   UnsupportedMediaTypeException,
   UseGuards,
   Req,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import {
@@ -23,11 +23,15 @@ import { UpdateAccountDto } from './dto/update-account.dto';
 var mime = require('mime-types');
 import * as _ from 'lodash';
 import { AuthGuard } from '@nestjs/passport';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('account')
 @UseGuards(AuthGuard('jwt'))
 export class AccountController {
-  constructor(private readonly accountService: AccountService) {}
+  constructor(
+    private readonly accountService: AccountService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Get()
   findAll() {
@@ -48,6 +52,7 @@ export class AccountController {
   )
   async update(
     @Param('id') id: string,
+    @Req() req,
     @Body() updateAccountDto: UpdateAccountDto,
     @UploadedFiles()
     files: {
@@ -56,33 +61,44 @@ export class AccountController {
       idCardBackImage?: Express.Multer.File[];
     },
   ) {
-    if (_.isEmpty(updateAccountDto)) {
-      throw new MethodNotAllowedException();
-    }
-    if (files.idCardFrontImage) {
-      const mineType = checkFileMineType(
-        mime.lookup(files.idCardFrontImage[0].originalname),
-      );
-      if (!mineType) throw new UnsupportedMediaTypeException();
-      const resultImg = (await uploadToCloudinary(
-        files.idCardFrontImage[0].buffer,
-        'image',
-      )) as string;
-      updateAccountDto.idCardFrontImage = resultImg;
-    }
+    // if (_.isEmpty(updateAccountDto)) {
+    //   throw new MethodNotAllowedException();
+    // }
+    // if (files.idCardFrontImage) {
+    //   const mineType = checkFileMineType(
+    //     mime.lookup(files.idCardFrontImage[0].originalname),
+    //   );
+    //   if (!mineType) throw new UnsupportedMediaTypeException();
+    //   const resultImg = (await uploadToCloudinary(
+    //     files.idCardFrontImage[0].buffer,
+    //     'image',
+    //   )) as string;
+    //   updateAccountDto.idCardFrontImage = resultImg;
+    // }
 
-    if (files.idCardBackImage) {
-      const mineType = checkFileMineType(
-        mime.lookup(files.idCardBackImage[0].originalname),
-      );
-      if (!mineType) throw new UnsupportedMediaTypeException();
-      const resultImg = (await uploadToCloudinary(
-        files.idCardBackImage[0].buffer,
-        'image',
-      )) as string;
-      updateAccountDto.idCardBackImage = resultImg;
+    // if (files.idCardBackImage) {
+    //   const mineType = checkFileMineType(
+    //     mime.lookup(files.idCardBackImage[0].originalname),
+    //   );
+    //   if (!mineType) throw new UnsupportedMediaTypeException();
+    //   const resultImg = (await uploadToCloudinary(
+    //     files.idCardBackImage[0].buffer,
+    //     'image',
+    //   )) as string;
+    //   updateAccountDto.idCardBackImage = resultImg;
+    // }
+    const newAccountData = await this.accountService.update(
+      +id,
+      updateAccountDto,
+    );
+    if (!newAccountData) {
+      throw new InternalServerErrorException();
     }
-    return this.accountService.update(+id, updateAccountDto);
+    const newToken = await this.authService.refreshToken(
+      req.user.email,
+      req.user.role,
+    );
+    return newToken;
   }
   @Patch('verify/:email')
   verify(@Param('email') email: string, @Body() body: any) {

@@ -12,6 +12,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { CarCategories } from '../enum/car.enum';
+import { Booking } from 'src/booking/entities/booking.entity';
 
 @Entity('car')
 export class Car extends BaseEntity {

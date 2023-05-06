@@ -31,6 +31,7 @@ export class AuthController {
   async login(@Req() req) {
     return this.authService.login(req.user);
   }
+
   @Post('register')
   async create(@Body() registerUserDto: RegisterUserDto) {
     const userData = await this.userService.filterOne({

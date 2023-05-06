@@ -29,11 +29,11 @@ import { SellerService } from './seller.service';
 var mime = require('mime-types');
 
 @Controller('seller')
-// @UseGuards(AuthGuard('jwt'))
 export class SellerController {
   constructor(private readonly sellerService: SellerService) {}
 
   @Post('add-car')
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('image'))
   async create(
     @Body() createCarDto: CreateCarDto,
@@ -61,8 +61,14 @@ export class SellerController {
   findAll() {
     return this.sellerService.findAll();
   }
+  @Get('car-list')
+  @UseGuards(AuthGuard('jwt'))
+  findAllWithUser(@Req() req) {
+    return this.sellerService.findAllWithUser(req.user.id);
+  }
 
   @Get('car/:id')
+  @UseGuards(AuthGuard('jwt'))
   async findOne(@Param('id') id: string, @Req() req) {
     const userId = req.user.id;
     const carData = await this.sellerService.findOne(+id, userId);
@@ -73,6 +79,7 @@ export class SellerController {
   }
 
   @Get('show/:id')
+  @UseGuards(AuthGuard('jwt'))
   async show(@Param('id') id: string) {
     const carData = await this.sellerService.show(+id);
     if (!carData) {
@@ -82,6 +89,7 @@ export class SellerController {
   }
 
   @Patch('update-car/:id')
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('image'))
   async update(
     @Req() req,
@@ -108,7 +116,8 @@ export class SellerController {
     }
   }
 
-  @Delete(':id')
+  @Delete('car/:id')
+  @UseGuards(AuthGuard('jwt'))
   remove(@Param('id') id: string) {
     return this.sellerService.remove(+id);
   }
