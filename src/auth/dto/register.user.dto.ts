@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsString,
   IsEmail,
@@ -8,14 +9,17 @@ import {
 import { UserType } from 'src/user/enum/user.enum';
 
 export class RegisterUserDto {
+  @Transform((value) => value.value.trim())
   @IsString()
   @IsNotEmpty()
   firstName: string;
 
+  @Transform((value) => value.value.trim())
   @IsString()
   @IsNotEmpty()
   lastName: string;
 
+  @Transform((value) => value.value.trim())
   @IsNotEmpty()
   @IsEmail()
   email: string;
@@ -24,6 +28,7 @@ export class RegisterUserDto {
   @IsString()
   password: string;
 
+  @Transform((value) => value.value.trim())
   @IsEnum(UserType)
   role: UserType;
 

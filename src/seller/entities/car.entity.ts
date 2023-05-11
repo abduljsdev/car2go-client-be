@@ -11,8 +11,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CarCategories } from '../enum/car.enum';
-import { Booking } from 'src/booking/entities/booking.entity';
+import { CarCategories, CarTransmission } from '../enum/car.enum';
 
 @Entity('car')
 export class Car extends BaseEntity {
@@ -25,26 +24,29 @@ export class Car extends BaseEntity {
   @Column()
   brandName: string;
 
-  @Column({ type: 'integer' })
-  model: number;
+  @Column()
+  model: string;
 
   @Column()
   number: string;
 
-  @Column({ type: 'boolean' })
-  transmission: boolean;
+  @Column({
+    type: 'enum',
+    enum: CarTransmission,
+  })
+  transmission: CarTransmission;
 
-  @Column({ type: 'integer' })
-  price: number;
+  @Column()
+  price: string;
 
-  @Column({ type: 'integer' })
-  seats: number;
+  @Column()
+  seats: string;
 
-  @Column({ type: 'integer' })
-  fuelAverage: number;
+  @Column()
+  fuelAverage: string;
 
-  @Column({ type: 'integer' })
-  doors: number;
+  @Column()
+  doors: string;
 
   @Column({ type: 'boolean' })
   airCondition: boolean;
@@ -55,11 +57,11 @@ export class Car extends BaseEntity {
   })
   category: CarCategories.SEDAN | CarCategories.SUV | CarCategories.VAN;
 
-  @Column({ type: 'integer' })
-  luggageCapacity: number;
+  @Column()
+  luggageCapacity: string;
 
-  @Column({ type: 'integer' })
-  passengerCapacity: number;
+  @Column()
+  passengerCapacity: string;
 
   @Column()
   location: string;
