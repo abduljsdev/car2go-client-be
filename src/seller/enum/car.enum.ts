@@ -5,3 +5,8 @@ export enum CarCategories {
   SUV = 'SUV',
   VAN = 'VAN',
 }
+
+export enum CarTransmission {
+  MANUAL = 'MANUAL',
+  AUTO = 'AUTO',
+}

@@ -1,62 +1,66 @@
-import { IsNumber, IsOptional, IsString, IsNotEmpty } from 'class-validator';
-import { CarCategories } from '../enum/car.enum';
-import { Type } from 'class-transformer';
+import { IsOptional, IsString, IsNotEmpty, IsEnum } from 'class-validator';
+import { CarCategories, CarTransmission } from '../enum/car.enum';
+import { Transform } from 'class-transformer';
 
 export class CreateCarDto {
+  @Transform((value) => value.value.trim())
   @IsNotEmpty()
   @IsString()
   name: string;
 
+  @Transform((value) => value.value.trim())
   @IsNotEmpty()
   @IsString()
   brandName: string;
 
+  @Transform((value) => value.value.trim())
   @IsNotEmpty()
-  @IsNumber()
-  @Type(() => Number)
-  model: number;
+  @IsString()
+  model: string;
 
+  @Transform((value) => value.value.trim())
   @IsNotEmpty()
   @IsString()
   number: string;
 
   @IsNotEmpty()
-  @Type(() => Boolean)
-  transmission: boolean;
+  @IsEnum(CarTransmission)
+  transmission: CarTransmission;
 
+  @Transform((value) => value.value.trim())
   @IsNotEmpty()
-  @Type(() => Number)
-  @IsNumber()
-  price: number;
+  @IsString()
+  price: string;
 
+  @Transform((value) => value.value.trim())
   @IsNotEmpty()
-  @Type(() => Number)
-  @IsNumber()
-  seats: number;
+  @IsString()
+  seats: string;
 
+  @Transform((value) => value.value.trim())
   @IsNotEmpty()
-  @Type(() => Number)
-  @IsNumber()
-  fuelAverage: number;
+  @IsString()
+  fuelAverage: string;
 
+  @Transform((value) => value.value.trim())
   @IsNotEmpty()
-  @IsNumber()
-  @Type(() => Number)
-  doors: number;
+  @IsString()
+  doors: string;
 
   @IsNotEmpty()
   category: CarCategories.SEDAN | CarCategories.SUV | CarCategories.VAN;
 
+  @Transform((value) => value.value.trim())
   @IsNotEmpty()
-  @IsNumber()
-  @Type(() => Number)
-  luggageCapacity: number;
+  @IsString()
+  luggageCapacity: string;
 
+  @Transform((value) => value.value.trim())
   @IsNotEmpty()
-  @IsNumber()
-  @Type(() => Number)
-  passengerCapacity: number;
+  @IsString()
+  passengerCapacity: string;
 
+  @Transform((value) => value.value.trim())
   @IsNotEmpty()
   @IsString()
   location: string;
@@ -64,9 +68,11 @@ export class CreateCarDto {
   @IsOptional()
   image: string;
 
+  @Transform((value) => value.value.trim())
   @IsNotEmpty()
   latitude: string;
 
+  @Transform((value) => value.value.trim())
   @IsNotEmpty()
   longitude: string;
 

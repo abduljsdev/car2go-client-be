@@ -47,7 +47,7 @@ export class AuthController {
     return this.userService.create(registerUserDto);
   }
   @Post('forget-password')
-  @UseGuards(AuthGuard('jwt'))
+  @HttpCode(HttpStatus.OK)
   forgetPassword(@Body() forgetPasswordDto: ForgetPasswordDto, @Req() req) {
     return this.authService.forgetPassword(forgetPasswordDto.email);
   }

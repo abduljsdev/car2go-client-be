@@ -69,7 +69,7 @@ export class AuthService {
       verificationCode: verCode,
     };
     const userId = userData.id;
-    var expiryTime = moment().utc().add(1, 'minutes').format();
+    var expiryTime = moment().utc().add(20, 'minutes').format();
     const htmlToSend = template(replacements);
     this.emailService.sendMail(email, htmlToSend, 'Confirm Email');
     await this.userService.updateWithOption(userId, {
@@ -113,14 +113,11 @@ export class AuthService {
   }
 
   async refreshToken(email: string, role: UserType) {
-    console.log(email, role, '111111111111111');
-
     const refreshUser = await this.userService.findLogin({
       email: email,
       role: role,
       isDeleted: false,
     });
-    console.log(refreshUser, '222222222222222');
 
     return this.login(refreshUser);
   }
