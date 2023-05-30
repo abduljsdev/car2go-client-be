@@ -2,9 +2,13 @@ import {
   Body,
   ConflictException,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Post,
+  Query,
+  Render,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -17,6 +21,7 @@ import { ForgetPasswordDto } from './dto/forget.password.dto';
 import { RegisterUserDto } from './dto/register.user.dto';
 import { UpdatePasswordDto } from './dto/update.password.dto';
 import { VerificationCodeDto } from './dto/verification.code.dto';
+import { EmailVerificationDto } from './dto/email.verification.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -61,5 +66,45 @@ export class AuthController {
     updatepasswordDto.password = enCodePassword(updatepasswordDto.password);
 
     return this.authService.updatePassword(updatepasswordDto);
+  }
+
+  @Post('email-verification')
+  @HttpCode(HttpStatus.OK)
+  async verificationEmail(@Body() emailVerificationDto: EmailVerificationDto) {
+    const userFound = await this.userService.filterOne({
+      email: emailVerificationDto.email,
+    });
+    if (userFound) {
+      this.authService.sendVerificationLink(userFound.email);
+      return { message: 'Email sent' };
+    } else {
+      throw new NotFoundException();
+    }
+  }
+
+  @Get('confirm-email')
+  @Render('email-verification')
+  @HttpCode(HttpStatus.OK)
+  async confirmEmail(@Query() query: { token: string }) {
+    const token = query.token;
+    const decodedToken = await this.authService.decodeConfirmationToken(token);
+
+    if (!decodedToken.status) {
+      return { message: decodedToken.message };
+    }
+    console.log(decodedToken.email);
+
+    const foundUser = await this.userService.filterOne({
+      email: decodedToken.email,
+    });
+
+    if (foundUser.emailVerified) {
+      return { message: 'Email is already verified' };
+    } else {
+      await this.userService.updateWithOption(foundUser.id, {
+        emailVerified: true,
+      });
+      return { message: 'Email is verified' };
+    }
   }
 }

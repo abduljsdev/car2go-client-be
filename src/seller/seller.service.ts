@@ -20,9 +20,10 @@ export class SellerService {
 
   findAll() {
     return this.carRepository.find({
-      relations: {
-        user: true,
-      },
+      where: { isActive: false },
+      // relations: {
+      //   user: true,
+      // },
     });
   }
 

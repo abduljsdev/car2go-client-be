@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ConflictException,
 } from '@nestjs/common';
 import { DriverService } from './driver.service';
 import { CreateDriverDto } from './dto/create-driver.dto';
@@ -16,9 +17,14 @@ export class DriverController {
   constructor(private readonly driverService: DriverService) {}
 
   @Post()
-  create(@Body() createDriverDto: CreateDriverDto) {
-    console.log(createDriverDto);
-
+  async create(@Body() createDriverDto: CreateDriverDto) {
+    const driverData = await this.driverService.filterOneDriver({
+      cnic: createDriverDto.cnic,
+      isActive: true,
+    });
+    if (driverData) {
+      throw new ConflictException('This driver is already booked');
+    }
     return this.driverService.create(createDriverDto);
   }
 

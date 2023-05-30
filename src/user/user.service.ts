@@ -6,6 +6,8 @@ import { Account } from 'src/account/entities/account.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RegisterUserDto } from 'src/auth/dto/register.user.dto';
+import { ContactUsDto } from './dto/contact-us.dto';
+import { ContactUs } from './entities/contact.entity';
 
 @Injectable()
 export class UserService {
@@ -14,6 +16,9 @@ export class UserService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Account)
     private readonly accountRepository: Repository<Account>,
+
+    @InjectRepository(ContactUs)
+    private readonly contactUsRepository: Repository<ContactUs>,
   ) {}
 
   async create(registerUserDto: RegisterUserDto) {
@@ -95,5 +100,12 @@ export class UserService {
   }
   remove(id: number) {
     return this.userRepository.update(id, { isDeleted: true });
+  }
+
+  contactUs(contactUsDto: ContactUsDto) {
+    const contactUsData = this.contactUsRepository.create({
+      ...contactUsDto,
+    });
+    return this.contactUsRepository.save(contactUsData);
   }
 }

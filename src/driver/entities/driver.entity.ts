@@ -24,6 +24,9 @@ export class Driver extends BaseEntity {
   @Column()
   license: string;
 
+  @Column({ type: 'boolean' })
+  isActive: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 

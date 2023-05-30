@@ -34,3 +34,17 @@ export const accountVerificationTemplate = `${EMAIL_TEMPLATES_HEADER}
 <p>Your account is verified.</p>
 </div>
 ${EMAIL_TEMPLATES_FOOTER}`;
+
+export const contactUsTemplate = `${EMAIL_TEMPLATES_HEADER}
+<div">
+<h3>Name:{{name}}</h3>
+<p>{{message}}</p>
+</div>
+${EMAIL_TEMPLATES_FOOTER}`;
+
+export const emailVerificationTemplate = `${EMAIL_TEMPLATES_HEADER}
+<div">
+<h2>Email Verification Link:</h2>
+<p>{{url}}</p>
+</div>
+${EMAIL_TEMPLATES_FOOTER}`;

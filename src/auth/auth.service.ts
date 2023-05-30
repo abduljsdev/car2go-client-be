@@ -8,7 +8,10 @@ import { JwtService } from '@nestjs/jwt';
 import { comparePassword } from 'src/utils/helpers/generic-helper';
 import { ERROR_MESSAGES } from 'src/utils/constants/generic.constants';
 import { VerificationCodeDto } from './dto/verification.code.dto';
-import { verificationCodeEmailTemplate } from 'src/utils/constants/email-templates';
+import {
+  emailVerificationTemplate,
+  verificationCodeEmailTemplate,
+} from 'src/utils/constants/email-templates';
 import { EmailService } from './../shared/email.service';
 import { UpdatePasswordDto } from './dto/update.password.dto';
 import { UserType } from 'src/user/enum/user.enum';
@@ -120,5 +123,42 @@ export class AuthService {
     });
 
     return this.login(refreshUser);
+  }
+
+  sendVerificationLink(email: string) {
+    const payload = { email };
+    const token = this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET,
+      expiresIn: process.env.JWT_EXPIRY,
+    });
+    const url = `${process.env.EMAIL_VERIFICATION_URL}?token=${token}`;
+    const template = handlebars.compile(emailVerificationTemplate);
+    const replacements = {
+      url: url,
+    };
+    const htmlToSend = template(replacements);
+    return this.emailService.sendMail([email], htmlToSend, 'Confirm Email');
+  }
+
+  async decodeConfirmationToken(token: string) {
+    try {
+      const payload = await this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET,
+      });
+
+      if (typeof payload === 'object' && 'email' in payload) {
+        return { status: true, email: payload.email };
+      }
+      throw new BadRequestException();
+    } catch (error) {
+      if (error?.name === 'TokenExpiredError') {
+        return {
+          message: 'Email confirmation token expired, Please try again',
+        };
+      }
+      return {
+        message: 'Bad Confirm Token',
+      };
+    }
   }
 }

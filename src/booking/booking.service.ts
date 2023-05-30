@@ -21,9 +21,27 @@ export class BookingService {
   findAll() {
     return `This action returns all booking`;
   }
+  findAllWithUser(userId: number) {
+    return this.bookingRepository.find({
+      where: {
+        buyerId: userId,
+      },
+      relations: {
+        car: true,
+      },
+    });
+  }
 
-  findOne(id: number) {
-    return `This action returns a #${id} booking`;
+  findOne(id: number, userId: number) {
+    return this.bookingRepository.findOne({
+      where: {
+        id: id,
+        buyerId: userId,
+      },
+      relations: {
+        car: true,
+      },
+    });
   }
 
   update(id: number, updateBookingDto: UpdateBookingDto) {

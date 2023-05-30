@@ -46,6 +46,9 @@ export class User extends BaseEntity {
   role: UserType;
 
   @Column({ default: false })
+  emailVerified: boolean;
+
+  @Column({ default: false })
   isDeleted: boolean;
 
   @OneToOne(() => Account)

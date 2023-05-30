@@ -8,8 +8,6 @@ import {
   Delete,
   UseGuards,
   Req,
-  BadRequestException,
-  NotFoundException,
   ConflictException,
 } from '@nestjs/common';
 import { BookingService } from './booking.service';
@@ -21,12 +19,13 @@ import { DriverService } from 'src/driver/driver.service';
 import { UserService } from 'src/user/user.service';
 
 @Controller('booking')
-// @UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'))
 export class BookingController {
   constructor(
     private readonly bookingService: BookingService,
     private readonly sellerService: SellerService,
     private readonly userService: UserService,
+    private readonly driverService: DriverService,
   ) {}
 
   @Post()
@@ -38,7 +37,7 @@ export class BookingController {
     if (!carData) {
       throw new ConflictException('This Car already book');
     }
-    const userData = await this.userService.findOne(+2);
+    const userData = await this.userService.findOne(req.user.id);
     createBookingDto.buyer = userData;
     createBookingDto.car = carData;
     createBookingDto.driver = createBookingDto.driverId;
@@ -47,9 +46,12 @@ export class BookingController {
       await this.sellerService.updateWithOptions(createBookingDto.carId, {
         isActive: true,
       });
+
+      await this.driverService.updateWithOptions(createBookingDto.driverId.id, {
+        isActive: true,
+      });
     }
     return bookingData;
-    // return true;
   }
 
   @Get()
@@ -57,9 +59,14 @@ export class BookingController {
     return this.bookingService.findAll();
   }
 
+  @Get('all-data')
+  findAllWithUser(@Req() req) {
+    return this.bookingService.findAllWithUser(req.user.id);
+  }
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.bookingService.findOne(+id);
+  findOne(@Param('id') id: string, @Req() req) {
+    return this.bookingService.findOne(+id, req.user.id);
   }
 
   @Patch(':id')

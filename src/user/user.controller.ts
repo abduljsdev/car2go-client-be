@@ -8,6 +8,9 @@ import {
   BadRequestException,
   NotFoundException,
   UseGuards,
+  Post,
+  InternalServerErrorException,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -18,12 +21,18 @@ import {
 import * as _ from 'lodash';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { AuthGuard } from '@nestjs/passport';
-var mime = require('mime-types');
+import { ContactUsDto } from './dto/contact-us.dto';
+import handlebars from 'handlebars';
+import { contactUsTemplate } from 'src/utils/constants/email-templates';
+import { EmailService } from 'src/shared/email.service';
 
 @Controller('user')
 @UseGuards(AuthGuard('jwt'))
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly emailService: EmailService,
+  ) {}
 
   @Patch('change-password/:id')
   async changePassword(
@@ -51,6 +60,11 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get('me')
+  async findMe(@Req() req: any) {
+    return await this.userService.findOne(req.user.id);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const userData = await this.userService.findOne(+id);
@@ -76,5 +90,21 @@ export class UserController {
       throw new NotFoundException();
     }
     return this.userService.remove(+id);
+  }
+
+  @Post('contact-us')
+  async contactUs(@Body() contactUsDto: ContactUsDto) {
+    const contactUsData = await this.userService.contactUs(contactUsDto);
+    if (!contactUsData) {
+      throw new InternalServerErrorException();
+    }
+    const replacements = {
+      name: contactUsDto.name,
+      message: contactUsDto.message,
+    };
+    const template = handlebars.compile(contactUsTemplate);
+    const htmlToSend = template(replacements);
+    this.emailService.sendMail(contactUsDto.email, htmlToSend, 'Confirm Email');
+    return true;
   }
 }
